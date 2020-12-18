@@ -4,6 +4,9 @@ const actions = {
     async login({dispatch, commit}, {email, password}) {
         try {
             await firebase.auth().signInWithEmailAndPassword(email, password)
+            dispatch('getUid').then(resp => {
+                console.log(resp)
+            })
         } catch(e) {
             throw e
         }
