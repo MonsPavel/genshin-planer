@@ -20,6 +20,7 @@
             <el-input placeholder="Please input" v-if="item.dropType !== 'Герои'" v-model="item.drop.name"></el-input>
             <el-button @click="addDrop()">Сохранить</el-button>
         </div>
+        <span>{{ attempts }}</span>
         <el-table
                 v-loading="loading"
                 :data="drops"
@@ -62,7 +63,8 @@
 
         computed: {
             ...mapGetters([
-                'drops'
+                'drops',
+                'attempts'
             ])
         },
 
