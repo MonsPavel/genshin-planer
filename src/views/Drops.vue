@@ -39,9 +39,6 @@
 <!--                    label="Address">-->
 <!--            </el-table-column>-->
 <!--        </el-table>-->
-        <button @click="$store.dispatch('auth/logout')">
-            Выйти
-        </button>
     </div>
 </template>
 
