@@ -112,3 +112,12 @@ export const heroes = [
         stars: 5
     }
 ]
+
+export const type = [
+    {
+        type: 'Герои'
+    },
+    {
+        type: 'Оружие'
+    }
+]

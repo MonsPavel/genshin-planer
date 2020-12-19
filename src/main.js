@@ -21,11 +21,12 @@ Vue.use(Element)
 const firebaseConfig = {
   apiKey: "AIzaSyBuGteG7_2JKlXipO7cXXpBhwjdH8oEcCo",
   authDomain: "genshin-planer.firebaseapp.com",
+  databaseURL: "https://genshin-planer-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "genshin-planer",
   storageBucket: "genshin-planer.appspot.com",
   messagingSenderId: "459184684865",
-  appId: "1:459184684865:web:da60f740f2713e29576bc0",
-  measurementId: "G-0YSSHM18Q4"
+  appId: "1:459184684865:web:d73e7332cc8128ca576bc0",
+  measurementId: "G-HPCG0KPZ2Y"
 }
 
 firebase.initializeApp(firebaseConfig)
