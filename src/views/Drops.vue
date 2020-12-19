@@ -17,7 +17,15 @@
                         :value="item.id">
                 </el-option>
             </el-select>
-            <el-input placeholder="Please input" v-if="item.dropType !== 'Герои'" v-model="item.drop.name"></el-input>
+            <el-input placeholder="Please input" v-if="item.dropType !== 'Герои'" v-model="item.name"></el-input>
+            <el-select v-model="item.stars" v-if="item.dropType !== 'Герои'" placeholder="Количество звезд">
+                <el-option
+                        v-for="item in [3,4,5]"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                </el-option>
+            </el-select>
             <el-button @click="addDrop()">Сохранить</el-button>
         </div>
         <span>{{ attempts }}</span>
@@ -81,9 +89,17 @@
 
             addDrop() {
                 this.loading = true
-                const drop = {
-                    name: this.heroes[this.item.dropIndex - 1].name,
-                    stars: this.heroes[this.item.dropIndex - 1].stars
+                let drop
+                if(this.item.dropType === 'Герои') {
+                    drop = {
+                        name: this.heroes[this.item.dropIndex - 1].name,
+                        stars: this.heroes[this.item.dropIndex - 1].stars
+                    }
+                } else {
+                    drop = {
+                        name: this.item.name,
+                        stars: this.item.stars
+                    }
                 }
 
                 this.$store.dispatch('drops/addDrop', drop)
