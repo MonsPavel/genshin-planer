@@ -66,21 +66,28 @@
             ])
         },
 
-        async mounted() {
-            await this.$store.dispatch('drops/getDrops').then(
-                () => {
-                    this.loading = false
-                })
-
+        mounted() {
+            this.getDrops()
         },
         methods: {
+            async getDrops() {
+                await this.$store.dispatch('drops/getDrops')
+                    .then(() => {
+                        this.loading = false
+                    })
+            },
+
             addDrop() {
+                this.loading = true
                 const drop = {
-                    name: this.item.drop.name,
-                    stars: this.item.drop.stars
+                    name: this.heroes[this.item.dropIndex].name,
+                    stars: this.heroes[this.item.dropIndex].stars
                 }
 
                 this.$store.dispatch('drops/addDrop', drop)
+                    .then((resp) => {
+                        this.getDrops()
+                    })
             },
         }
     }
