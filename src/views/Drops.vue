@@ -20,25 +20,26 @@
             <el-input placeholder="Please input" v-if="item.dropType !== 'Герои'" v-model="item.drop.name"></el-input>
             <el-button @click="addDrop()">Сохранить</el-button>
         </div>
-<!--        <el-table-->
-<!--                :data="tableData"-->
-<!--                border-->
-<!--                style="width: 100%">-->
-<!--            <el-table-column-->
-<!--                    prop="date"-->
-<!--                    label="Date"-->
-<!--                    width="180">-->
-<!--            </el-table-column>-->
-<!--            <el-table-column-->
-<!--                    prop="name"-->
-<!--                    label="Name"-->
-<!--                    width="180">-->
-<!--            </el-table-column>-->
-<!--            <el-table-column-->
-<!--                    prop="address"-->
-<!--                    label="Address">-->
-<!--            </el-table-column>-->
-<!--        </el-table>-->
+        <el-table
+                v-loading="loading"
+                :data="drops"
+                element-loading-text="Loading"
+                border
+                style="width: 100%">
+            <el-table-column
+                    type="index"
+                    width="50">
+            </el-table-column>
+            <el-table-column
+                    prop="name"
+                    label="Name"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="stars"
+                    label="stars">
+            </el-table-column>
+        </el-table>
     </div>
 </template>
 
@@ -53,6 +54,7 @@
                     dropType: 'Герои',
                     dropIndex: null
                 },
+                loading: true,
                 type,
                 heroes
             }
@@ -64,8 +66,12 @@
             ])
         },
 
-        mounted() {
-            this.$store.dispatch('drops/getDrops')
+        async mounted() {
+            await this.$store.dispatch('drops/getDrops').then(
+                () => {
+                    this.loading = false
+                })
+
         },
         methods: {
             addDrop() {
