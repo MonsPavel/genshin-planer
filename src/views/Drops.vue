@@ -1,6 +1,7 @@
 <template>
     <div class="app-container">
         <div>
+            <button @click="getFilteredDrops()">Показать 5</button>
             <el-select v-model="item.dropType">
                 <el-option
                         v-for="item in type"
@@ -85,6 +86,10 @@
                     .then(() => {
                         this.loading = false
                     })
+            },
+
+            getFilteredDrops() {
+                this.$store.dispatch('drops/getFilteredDrops')
             },
 
             addDrop() {

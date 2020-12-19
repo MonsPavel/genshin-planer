@@ -42,6 +42,15 @@ const actions = {
     async addDrop({dispatch, commit}, drop) {
         const currentUser = firebase.auth().currentUser.uid
         firebase.database().ref(`/users/${currentUser}/drops`).push(drop)
+    },
+
+    getFilteredDrops({dispatch, commit}) {
+        const currentUser = firebase.auth().currentUser.uid
+        let filteredDrops = []
+        firebase.database().ref(`/users/${currentUser}/drops`).orderByChild("stars").equalTo(5).on("child_added", function(data) {
+            filteredDrops.push(data.val())
+        })
+        commit('SET_DROPS', filteredDrops)
     }
 }
 
