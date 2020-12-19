@@ -3,10 +3,10 @@ import firebase from 'firebase'
 const actions = {
     async login({dispatch, commit}, {email, password}) {
         try {
-            await firebase.auth().signInWithEmailAndPassword(email, password)
-            dispatch('getUid').then(resp => {
-                console.log(resp)
-            })
+            await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+                .then((resp) => {
+                    return firebase.auth().signInWithEmailAndPassword(email, password)
+                })
         } catch(e) {
             throw e
         }

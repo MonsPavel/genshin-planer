@@ -5,6 +5,8 @@ import store from './store'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
+import './icons' // icon
+
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
