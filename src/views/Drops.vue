@@ -82,8 +82,8 @@
             addDrop() {
                 this.loading = true
                 const drop = {
-                    name: this.heroes[this.item.dropIndex].name,
-                    stars: this.heroes[this.item.dropIndex].stars
+                    name: this.heroes[this.item.dropIndex - 1].name,
+                    stars: this.heroes[this.item.dropIndex - 1].stars
                 }
 
                 this.$store.dispatch('drops/addDrop', drop)
