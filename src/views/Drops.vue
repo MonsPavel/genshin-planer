@@ -63,13 +63,21 @@
                     label="Дата"
                     width="180">
             </el-table-column>
+            <el-table-column align="center" prop="created_at" label="Управление" width="200">
+                <template slot-scope="scope">
+                    <el-button icon="el-icon-edit" circle @click="editDrop(scope.row)"></el-button>
+                </template>
+            </el-table-column>
         </el-table>
+
+        <EditDropModal ref="editDrop"/>
     </div>
 </template>
 
 <script>
     import {type, heroes} from '../utils/constants'
     import {mapGetters} from 'vuex'
+    import EditDropModal from '../components/EditDropModal'
     export default {
         name: 'Drops',
         data() {
@@ -82,6 +90,10 @@
                 type,
                 heroes
             }
+        },
+
+        components: {
+            EditDropModal
         },
 
         computed: {
@@ -149,8 +161,13 @@
                 this.$store.dispatch('drops/addDrop', drop)
                     .then((resp) => {
                         this.getDrops()
+
                     })
             },
+
+            editDrop(drop) {
+                this.$refs.editDrop.openModal(drop)
+            }
         }
     }
 </script>
