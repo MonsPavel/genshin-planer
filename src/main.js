@@ -19,6 +19,7 @@ import 'firebase/database'
 Vue.config.productionTip = false
 
 Vue.use(Element)
+Vue.use(require('vue-moment'))
 
 const firebaseConfig = {
   apiKey: "AIzaSyBuGteG7_2JKlXipO7cXXpBhwjdH8oEcCo",

@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div class="app-container drops">
         <div class="add-drop">
             <el-select v-model="item.dropType">
                 <el-option
@@ -28,8 +28,8 @@
             </el-select>
             <el-button @click="addDrop()">Сохранить</el-button>
         </div>
-        <div class="drop-attempts">
-            <span>Количество молитв после легендарного дропа: {{ attempts }}</span>
+        <div class="drop-attempts" >
+            <span>Количество молитв после легендарного дропа: {{ attempts || 'нет' }}</span>
         </div>
         <el-table
                 v-loading="loading"
@@ -42,13 +42,26 @@
                     width="50">
             </el-table-column>
             <el-table-column
+                    label="Type"
+            >
+                <template slot-scope="scope">
+                    {{ scope.row.type === 'heroes' ? 'Герой' : 'Оружие' }}
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="name"
                     label="Name"
-                    width="180">
+                    >
             </el-table-column>
             <el-table-column
                     prop="stars"
-                    label="stars">
+                    label="stars"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="date"
+                    label="Дата"
+                    width="180">
             </el-table-column>
         </el-table>
     </div>
@@ -86,7 +99,7 @@
                 await this.$store.dispatch('drops/getDrops')
                     .then(() => {
                         this.loading = false
-                    })
+                    }).finally(() => this.loading = false)
             },
 
             getFilteredDrops() {
@@ -119,13 +132,17 @@
                 let drop
                 if(this.item.dropType === 'Герои') {
                     drop = {
+                        type: 'heroes',
                         name: this.heroes[this.item.dropIndex - 1].name,
-                        stars: this.heroes[this.item.dropIndex - 1].stars
+                        stars: this.heroes[this.item.dropIndex - 1].stars,
+                        date: this.$moment().format('DD-MM-YYYY')
                     }
                 } else {
                     drop = {
+                        type: 'weapon',
                         name: this.item.name,
-                        stars: this.item.stars
+                        stars: this.item.stars,
+                        date: this.$moment().format('DD-MM-YYYY')
                     }
                 }
 
@@ -139,25 +156,32 @@
 </script>
 
 <style lang="scss">
-    .add-drop {
-        display: flex;
+    .drops {
+        .add-drop {
+            display: flex;
 
-        & .el-select, .el-button, .el-input{
-            margin-right: 20px;
+            & .el-select, .el-button, .el-input{
+                margin-right: 20px;
+            }
+
+            &> .el-input{
+                width: 300px;
+            }
         }
 
-        &> .el-input{
-            width: 300px;
+        .drop-attempts {
+            display: flex;
+            justify-content: right;
+            padding: 10px 0;
+            & > span {
+                width: 100%;
+                text-align: end;
+            }
         }
-    }
 
-    .drop-attempts {
-        display: flex;
-        justify-content: right;
-        padding: 10px 0;
-        & > span {
-            width: 100%;
-            text-align: end;
+        .el-table {
+            max-height: calc(100vh - 150px);
+            overflow: auto;
         }
     }
 </style>
