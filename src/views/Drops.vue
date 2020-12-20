@@ -1,7 +1,6 @@
 <template>
     <div class="app-container">
-        <div>
-            <button @click="getFilteredDrops()">Показать 5</button>
+        <div class="add-drop">
             <el-select v-model="item.dropType">
                 <el-option
                         v-for="item in type"
@@ -18,7 +17,7 @@
                         :value="item.id">
                 </el-option>
             </el-select>
-            <el-input placeholder="Please input" v-if="item.dropType !== 'Герои'" v-model="item.name"></el-input>
+            <el-input placeholder="Введите название оружия" class="weapon-input" v-if="item.dropType !== 'Герои'" v-model="item.name"></el-input>
             <el-select v-model="item.stars" v-if="item.dropType !== 'Герои'" placeholder="Количество звезд">
                 <el-option
                         v-for="item in [3,4,5]"
@@ -29,7 +28,9 @@
             </el-select>
             <el-button @click="addDrop()">Сохранить</el-button>
         </div>
-        <span>{{ attempts }}</span>
+        <div class="drop-attempts">
+            <span>Количество молитв после легендарного дропа: {{ attempts }}</span>
+        </div>
         <el-table
                 v-loading="loading"
                 :data="drops"
@@ -92,8 +93,29 @@
                 this.$store.dispatch('drops/getFilteredDrops')
             },
 
+            validateDrop() {
+                if(this.item.dropType === 'Герои') {
+                    if(!this.item.dropIndex) {
+                        this.loading = false
+                        return this.$notify({
+                            message: 'Заполнены не все поля',
+                            type: 'warning'
+                        })
+                    }
+                } else {
+                    if(!this.item.name || !this.item.stars) {
+                        this.loading = false
+                        return this.$notify({
+                            message: 'Заполнены не все поля',
+                            type: 'warning'
+                        })
+                    }
+                }
+            },
+
             addDrop() {
                 this.loading = true
+                this.validateDrop()
                 let drop
                 if(this.item.dropType === 'Герои') {
                     drop = {
@@ -116,6 +138,26 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss">
+    .add-drop {
+        display: flex;
 
+        & .el-select, .el-button, .el-input{
+            margin-right: 20px;
+        }
+
+        &> .el-input{
+            width: 300px;
+        }
+    }
+
+    .drop-attempts {
+        display: flex;
+        justify-content: right;
+        padding: 10px 0;
+        & > span {
+            width: 100%;
+            text-align: end;
+        }
+    }
 </style>
