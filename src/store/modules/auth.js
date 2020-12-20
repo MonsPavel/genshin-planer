@@ -5,7 +5,7 @@ const actions = {
         try {
             await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
                 .then((resp) => {
-                    firebase.auth().signInWithEmailAndPassword(email, password)
+                    return firebase.auth().signInWithEmailAndPassword(email, password)
                     //verification logic
                     // firebase.auth().onAuthStateChanged(newUser => {
                     //     if(!newUser.emailVerified) {
