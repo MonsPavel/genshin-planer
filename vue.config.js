@@ -14,7 +14,7 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   configureWebpack: {
-    name: 'genshin-planer',
+    name: 'genshin-planner',
     resolve: {
       alias: {
         '@': resolve('src')
