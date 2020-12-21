@@ -70,7 +70,7 @@
             </el-table-column>
         </el-table>
 
-        <EditDropModal ref="editDrop"/>
+        <EditDropModal ref="editDrop" @drops:updated="getDrops()"/>
     </div>
 </template>
 

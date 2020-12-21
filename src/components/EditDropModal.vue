@@ -61,7 +61,31 @@
             },
 
             saveDrop() {
+                let drop
+                const id = this.item.key
+                if(this.item.dropType === 'Герои') {
+                    drop = {
+                        type: 'heroes',
+                        name: this.heroes[this.item.dropIndex - 1].name,
+                        stars: this.heroes[this.item.dropIndex - 1].stars,
+                        date: this.item.date,
+                        id: id
+                    }
+                } else {
+                    drop = {
+                        type: 'weapon',
+                        name: this.item.name,
+                        stars: this.item.stars,
+                        date: this.item.date,
+                        id: id
+                    }
+                }
 
+                this.$store.dispatch('drops/updateDrop', drop)
+                    .then(resp => {
+                        this.$emit('drops:updated')
+                        this.centerDialogVisible = false
+                    })
             }
         }
     }

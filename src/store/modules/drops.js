@@ -44,6 +44,22 @@ const actions = {
         firebase.database().ref(`/users/${currentUser}/drops`).push(drop)
     },
 
+    async updateDrop({commit, dispatch}, {
+        type,
+        name,
+        stars,
+        date,
+        id
+    }) {
+        const currentUser = firebase.auth().currentUser.uid
+        await firebase.database().ref(`/users/${currentUser}/drops`).child(id).update({
+            type,
+            name,
+            stars,
+            date
+        })
+    },
+
     getFilteredDrops({dispatch, commit}) {
         const currentUser = firebase.auth().currentUser.uid
         let filteredDrops = []
