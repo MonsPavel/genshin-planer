@@ -66,6 +66,16 @@
             <el-table-column align="center" prop="created_at" label="Управление" width="200">
                 <template slot-scope="scope">
                     <el-button icon="el-icon-edit" circle @click="editDrop(scope.row)"></el-button>
+                    <el-popconfirm
+                            confirm-button-text='OK'
+                            cancel-button-text='No, Thanks'
+                            icon="el-icon-info"
+                            icon-color="red"
+                            title="Are you sure to delete this?"
+                            @confirm="deleteDrop(scope.row.key)"
+                    >
+                        <el-button icon="el-icon-delete" slot="reference" circle></el-button>
+                    </el-popconfirm>
                 </template>
             </el-table-column>
         </el-table>
@@ -167,6 +177,10 @@
 
             editDrop(drop) {
                 this.$refs.editDrop.openModal(drop)
+            },
+
+            deleteDrop(key) {
+                this.$store.dispatch('drops/deleteDrop', key)
             }
         }
     }

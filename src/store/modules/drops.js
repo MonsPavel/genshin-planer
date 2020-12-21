@@ -44,6 +44,13 @@ const actions = {
         firebase.database().ref(`/users/${currentUser}/drops`).push(drop)
     },
 
+    async deleteDrop({dispatch, commit}, key) {
+        const currentUser = firebase.auth().currentUser.uid
+        await firebase.database().ref(`/users/${currentUser}/drops/${key}`).remove()
+        let drops = state.drops.filter(drop => drop.key !== key)
+        commit('SET_DROPS', drops)
+    },
+
     async updateDrop({commit, dispatch}, {
         type,
         name,
