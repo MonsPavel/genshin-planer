@@ -1,5 +1,10 @@
 export const heroes = [
     {
+        id: 27,
+        name: 'Albedo',
+        stars: 5
+    },
+    {
         id: 1,
         name: 'Amber',
         stars: 4
@@ -38,6 +43,11 @@ export const heroes = [
         id: 8,
         name: 'Fischl',
         stars: 4
+    },
+    {
+        id: 28,
+        name: 'Ganyu',
+        stars: 5
     },
     {
         id: 9,
@@ -125,7 +135,7 @@ export const heroes = [
         stars: 4
     },
     {
-        id: 16,
+        id: 26,
         name: 'Zhongli',
         stars: 5
     }
