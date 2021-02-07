@@ -11,10 +11,10 @@
             </el-select>
             <el-select v-model="item.dropIndex" v-if="item.dropType === 'Герои'" placeholder="Выберете героя" filterable>
                 <el-option
-                        v-for="item in heroes"
+                        v-for="(item, index) in heroes"
                         :key="item.name"
                         :label="item.name"
-                        :value="item.id">
+                        :value="index">
                 </el-option>
             </el-select>
             <el-input placeholder="Введите название оружия" class="weapon-input" v-if="item.dropType !== 'Герои'" v-model="item.name"></el-input>
@@ -155,8 +155,8 @@
                 if(this.item.dropType === 'Герои') {
                     drop = {
                         type: 'heroes',
-                        name: this.heroes[this.item.dropIndex - 1].name,
-                        stars: this.heroes[this.item.dropIndex - 1].stars,
+                        name: this.heroes[this.item.dropIndex].name,
+                        stars: this.heroes[this.item.dropIndex].stars,
                         date: this.$moment().format('DD-MM-YYYY')
                     }
                 } else {

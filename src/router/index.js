@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Auth from '../views/Auth'
 import Drops from '../views/Drops'
 import firebase from 'firebase/app'
+import Heroes from '../views/Heroes'
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,11 @@ const routes = [
     path: '/auth',
     name: 'Auth',
     component: Auth
+  },
+  {
+    path: '/heroes',
+    name: 'Heroes',
+    component: Heroes
   }
 ]
 
