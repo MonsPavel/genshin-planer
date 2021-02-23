@@ -4,6 +4,8 @@ import Auth from '../views/Auth'
 import Drops from '../views/Drops'
 import firebase from 'firebase/app'
 import Heroes from '../views/Heroes'
+import Banners from '../views/Banners'
+import Weapons from '../views/Weapons'
 
 Vue.use(VueRouter)
 
@@ -23,7 +25,17 @@ const routes = [
     path: '/heroes',
     name: 'Heroes',
     component: Heroes
-  }
+  },
+  {
+    path: '/banners',
+    name: 'Banners',
+    component: Banners
+  },
+  {
+    path: '/weapons',
+    name: 'Weapons',
+    component: Weapons
+  },
 ]
 
 const router = new VueRouter({
