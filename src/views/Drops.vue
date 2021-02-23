@@ -27,57 +27,63 @@
             </el-select>
             <el-button @click="addDrop()">Сохранить</el-button>
         </div>
-        <div class="drop-attempts" >
-            <span>Количество молитв после легендарного дропа: {{ attempts || 'нет' }}</span>
-        </div>
-        <el-table
-                v-loading="loading"
-                :data="drops"
-                element-loading-text="Loading"
-                border
-                style="width: 100%">
-            <el-table-column
-                    type="index"
-                    width="50">
-            </el-table-column>
-            <el-table-column
-                    label="Type"
-            >
-                <template slot-scope="scope">
-                    {{ scope.row.type === 'heroes' ? 'Герой' : 'Оружие' }}
-                </template>
-            </el-table-column>
-            <el-table-column
-                    prop="name"
-                    label="Name"
+        <el-tabs v-model="activeName">
+            <el-tab-pane label="Standard" name="Standard">
+                <div class="drop-attempts" >
+                    <span>Количество молитв после легендарного дропа: {{ attempts || 'нет' }}</span>
+                </div>
+                <el-table
+                        v-loading="loading"
+                        :data="drops"
+                        element-loading-text="Loading"
+                        border
+                        style="width: 100%">
+                    <el-table-column
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            label="Type"
                     >
-            </el-table-column>
-            <el-table-column
-                    prop="stars"
-                    label="stars"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="date"
-                    label="Дата"
-                    width="180">
-            </el-table-column>
-            <el-table-column align="center" prop="created_at" label="Управление" width="200">
-                <template slot-scope="scope">
-                    <el-button icon="el-icon-edit" circle @click="editDrop(scope.row)"></el-button>
-                    <el-popconfirm
-                            confirm-button-text='OK'
-                            cancel-button-text='No, Thanks'
-                            icon="el-icon-info"
-                            icon-color="red"
-                            title="Are you sure to delete this?"
-                            @confirm="deleteDrop(scope.row.key)"
+                        <template slot-scope="scope">
+                            {{ scope.row.type === 'heroes' ? 'Герой' : 'Оружие' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="name"
+                            label="Name"
                     >
-                        <el-button icon="el-icon-delete" slot="reference" circle></el-button>
-                    </el-popconfirm>
-                </template>
-            </el-table-column>
-        </el-table>
+                    </el-table-column>
+                    <el-table-column
+                            prop="stars"
+                            label="stars"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="date"
+                            label="Дата"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column align="center" prop="created_at" label="Управление" width="200">
+                        <template slot-scope="scope">
+                            <el-button icon="el-icon-edit" circle @click="editDrop(scope.row)"></el-button>
+                            <el-popconfirm
+                                    confirm-button-text='OK'
+                                    cancel-button-text='No, Thanks'
+                                    icon="el-icon-info"
+                                    icon-color="red"
+                                    title="Are you sure to delete this?"
+                                    @confirm="deleteDrop(scope.row.key)"
+                            >
+                                <el-button icon="el-icon-delete" slot="reference" circle></el-button>
+                            </el-popconfirm>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-tab-pane>
+            <el-tab-pane label="Limit" name="Limit">Limit</el-tab-pane>
+            <el-tab-pane label="Weapon" name="Weapon">Weapon</el-tab-pane>
+        </el-tabs>
 
         <EditDropModal ref="editDrop" @drops:updated="getDrops()"/>
     </div>
@@ -98,6 +104,7 @@
                 loading: true,
                 weapons: [],
                 heroes: [],
+                activeName: 'Standard',
                 type
             }
         },
@@ -119,7 +126,7 @@
         },
         methods: {
             async getDrops() {
-                await this.$store.dispatch('drops/getDrops')
+                await this.$store.dispatch('drops/getDrops', this.activeName)
                     .then(() => {
                         this.loading = false
                     }).finally(() => this.loading = false)
@@ -159,10 +166,9 @@
                     }
                 }
 
-                this.$store.dispatch('drops/addDrop', drop)
+                this.$store.dispatch('drops/addDrop', {drop, type: this.activeName})
                     .then((resp) => {
                         this.getDrops()
-
                     })
             },
 
@@ -170,8 +176,11 @@
                 this.$refs.editDrop.openModal(drop)
             },
 
-            deleteDrop(key) {
-                this.$store.dispatch('drops/deleteDrop', key)
+            async deleteDrop(key) {
+                await this.$store.dispatch('drops/deleteDrop', {key, type: this.activeName})
+                    .then(() => {
+                        this.getDrops()
+                    })
             },
 
             async getData() {
