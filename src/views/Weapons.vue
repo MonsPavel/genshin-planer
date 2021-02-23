@@ -1,16 +1,16 @@
 <template>
     <div>
-        <div class="add-hero">
-            <el-input placeholder="Введите имя героя" class="weapon-input" v-model="hero.name"></el-input>
-            <el-select v-model="hero.stars" placeholder="Количество звезд">
+        <div class="add-weapon">
+            <el-input placeholder="Введите название оружия" class="weapon-input" v-model="weapon.name"></el-input>
+            <el-select v-model="weapon.stars" placeholder="Количество звезд">
                 <el-option
-                        v-for="item in [4,5]"
+                        v-for="item in [3,4,5]"
                         :key="item"
                         :label="item"
                         :value="item">
                 </el-option>
             </el-select>
-            <el-button @click="addHero()">Сохранить</el-button>
+            <el-button @click="addWeapon()">Сохранить</el-button>
         </div>
     </div>
 </template>
@@ -19,11 +19,11 @@
     import {mapGetters} from 'vuex'
 
     export default {
-        name: 'Heroes',
+        name: 'Weapons',
 
         data() {
             return {
-                hero: {
+                weapon: {
                     stars: null,
                     name: null
                 }
@@ -32,33 +32,28 @@
 
         computed: {
             ...mapGetters([
-                'heroes'
+                'weapons'
             ])
         },
 
         methods: {
-            async getHeroes() {
-                await this.$store.dispatch('heroes/getHeroes')
+            async getWeapons() {
+                await this.$store.dispatch('weapons/getWeapons')
                     .then(() => {
                         this.loading = false
                     }).finally(() => this.loading = false)
             },
 
-            addHero() {
-                this.$store.dispatch('heroes/addHero', this.hero)
+            addWeapon() {
+                this.$store.dispatch('weapons/addWeapon', this.weapon)
                     .then((resp) => {
-                        this.hero = {
-                            stars: null,
-                            name: null
-                        }
-
-                        this.getHeroes()
+                        this.weapon.name = null
                     })
-            },
+            }
         },
 
         mounted() {
-            this.getHeroes()
+            this.getWeapons()
         }
     }
 </script>

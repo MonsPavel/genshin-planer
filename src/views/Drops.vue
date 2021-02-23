@@ -17,13 +17,12 @@
                         :value="index">
                 </el-option>
             </el-select>
-            <el-input placeholder="Введите название оружия" class="weapon-input" v-if="item.dropType !== 'Герои'" v-model="item.name"></el-input>
-            <el-select v-model="item.stars" v-if="item.dropType !== 'Герои'" placeholder="Количество звезд">
+            <el-select v-model="item.dropIndex" v-else placeholder="Выберете оружие" filterable>
                 <el-option
-                        v-for="item in [3,4,5]"
-                        :key="item"
-                        :label="item"
-                        :value="item">
+                        v-for="(item, index) in weapons"
+                        :key="item.name"
+                        :label="item.name"
+                        :value="index">
                 </el-option>
             </el-select>
             <el-button @click="addDrop()">Сохранить</el-button>
@@ -97,8 +96,9 @@
                     dropIndex: null
                 },
                 loading: true,
-                type,
-                heroes
+                weapons: [],
+                heroes: [],
+                type
             }
         },
 
@@ -115,6 +115,7 @@
 
         mounted() {
             this.getDrops()
+            this.getData()
         },
         methods: {
             async getDrops() {
@@ -129,22 +130,12 @@
             },
 
             validateDrop() {
-                if(this.item.dropType === 'Герои') {
-                    if(!this.item.dropIndex) {
-                        this.loading = false
-                        return this.$notify({
-                            message: 'Заполнены не все поля',
-                            type: 'warning'
-                        })
-                    }
-                } else {
-                    if(!this.item.name || !this.item.stars) {
-                        this.loading = false
-                        return this.$notify({
-                            message: 'Заполнены не все поля',
-                            type: 'warning'
-                        })
-                    }
+                if(!this.item.dropIndex) {
+                    this.loading = false
+                    return this.$notify({
+                        message: 'Заполнены не все поля',
+                        type: 'warning'
+                    })
                 }
             },
 
@@ -162,8 +153,8 @@
                 } else {
                     drop = {
                         type: 'weapon',
-                        name: this.item.name,
-                        stars: this.item.stars,
+                        name: this.weapons[this.item.dropIndex].name,
+                        stars: this.weapons[this.item.dropIndex].stars,
                         date: this.$moment().format('DD-MM-YYYY')
                     }
                 }
@@ -181,6 +172,20 @@
 
             deleteDrop(key) {
                 this.$store.dispatch('drops/deleteDrop', key)
+            },
+
+            async getData() {
+                await this.$store.dispatch('weapons/getWeapons')
+                    .then(() => {
+                        this.weapons = this.$store.state.weapons.weapons
+                        this.loading = false
+                    }).finally(() => this.loading = false)
+
+                await this.$store.dispatch('heroes/getHeroes')
+                    .then(() => {
+                        this.heroes = this.$store.state.heroes.heroes
+                        this.loading = false
+                    }).finally(() => this.loading = false)
             }
         }
     }
