@@ -13,21 +13,20 @@
                         :value="item.type">
                 </el-option>
             </el-select>
-            <el-select v-model="item.dropIndex" v-if="item.dropType === 'Герои'" placeholder="Выберете героя" filterable>
+            <el-select v-model="item.name" v-if="item.dropType === 'heroes'" placeholder="Выберете героя" filterable>
                 <el-option
-                        v-for="item in heroes"
+                        v-for="(item, index) in heroes"
                         :key="item.name"
                         :label="item.name"
-                        :value="item.id">
+                        :value="index">
                 </el-option>
             </el-select>
-            <el-input placeholder="Введите название оружия" class="weapon-input" v-if="item.dropType !== 'Герои'" v-model="item.name"></el-input>
-            <el-select v-model="item.stars" v-if="item.dropType !== 'Герои'" placeholder="Количество звезд">
+            <el-select v-model="item.name" v-else placeholder="Выберете оружие" filterable>
                 <el-option
-                        v-for="item in [3,4,5]"
-                        :key="item"
-                        :label="item"
-                        :value="item">
+                        v-for="(item, index) in weapons"
+                        :key="item.name"
+                        :label="item.name"
+                        :value="index">
                 </el-option>
             </el-select>
             <el-button @click="saveDrop()">Сохранить</el-button>
@@ -36,15 +35,30 @@
 </template>
 
 <script>
-    import {type, heroes} from '../utils/constants'
+    import {type} from '../utils/constants'
     export default {
         name: 'EditDropModal',
+
+        props: {
+            heroes: {
+              type: Array,
+              required: false
+            },
+            weapons: {
+                type: Array,
+                required: false
+            },
+            activeName: {
+                type: String,
+                required: true
+            }
+        },
+
         data() {
             return {
                 centerDialogVisible: false,
                 item: {},
-                type,
-                heroes
+                type
             }
         },
 
@@ -52,20 +66,20 @@
             openModal(drop) {
                 this.centerDialogVisible = true
                 this.item = drop
-                this.item.type === 'weapon'
-                    ? this.item.dropType = 'Оружие'
-                    : this.item.dropType = 'Герои'
                 if(this.item.dropType === 'Герои') {
                     this.item.dropIndex = this.heroes.findIndex(hero => hero.name === this.item.name) + 1
+                } else {
+                    this.item.dropIndex = this.weapons.findIndex(hero => hero.name === this.item.name) + 1
                 }
             },
 
             saveDrop() {
                 let drop
+                let type = this.activeName
                 const id = this.item.key
                 if(this.item.dropType === 'Герои') {
                     drop = {
-                        type: 'heroes',
+                        type: this.item.type,
                         name: this.heroes[this.item.dropIndex - 1].name,
                         stars: this.heroes[this.item.dropIndex - 1].stars,
                         date: this.item.date,
@@ -73,15 +87,15 @@
                     }
                 } else {
                     drop = {
-                        type: 'weapon',
-                        name: this.item.name,
-                        stars: this.item.stars,
+                        type: this.item.type,
+                        name: this.weapons[this.item.dropIndex - 1].name,
+                        stars: this.weapons[this.item.dropIndex - 1].stars,
                         date: this.item.date,
                         id: id
                     }
                 }
 
-                this.$store.dispatch('drops/updateDrop', drop)
+                this.$store.dispatch('drops/updateDrop', {drop, type: this.activeName})
                     .then(resp => {
                         this.$emit('drops:updated')
                         this.centerDialogVisible = false

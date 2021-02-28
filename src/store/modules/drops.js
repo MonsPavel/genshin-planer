@@ -49,24 +49,21 @@ const actions = {
 
     async deleteDrop({dispatch, commit}, key) {
         const currentUser = firebase.auth().currentUser.uid
-        await firebase.database().ref(`/users/${currentUser}/drops//${key.type}/${key.key}`).remove()
+        await firebase.database().ref(`/users/${currentUser}/drops/${key.type}/${key.key}`).remove()
         let drops = state.drops.filter(drop => drop.key !== key)
         commit('SET_DROPS', drops)
     },
 
     async updateDrop({commit, dispatch}, {
         type,
-        name,
-        stars,
-        date,
-        id
+        drop
     }) {
         const currentUser = firebase.auth().currentUser.uid
-        await firebase.database().ref(`/users/${currentUser}/drops`).child(id).update({
-            type,
-            name,
-            stars,
-            date
+        await firebase.database().ref(`/users/${currentUser}/drops/${type}`).child(drop.id).update({
+            type: drop.type,
+            name: drop.name,
+            stars: drop.stars,
+            date: drop.date
         })
     },
 
