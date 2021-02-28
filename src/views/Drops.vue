@@ -27,7 +27,7 @@
             </el-select>
             <el-button @click="addDrop()">Сохранить</el-button>
         </div>
-        <el-tabs v-model="activeName">
+        <el-tabs v-model="activeName" @tab-click="changeTab">
             <el-tab-pane label="Standard" name="Standard">
                 <div class="drop-attempts" >
                     <span>Количество молитв после легендарного дропа: {{ attempts || 'нет' }}</span>
@@ -81,16 +81,120 @@
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
-            <el-tab-pane label="Limit" name="Limit">Limit</el-tab-pane>
-            <el-tab-pane label="Weapon" name="Weapon">Weapon</el-tab-pane>
+            <el-tab-pane label="Limit" name="Limit">
+                <div class="drop-attempts" >
+                <span>Количество молитв после легендарного дропа: {{ attempts || 'нет' }}</span>
+            </div>
+                <el-table
+                        v-loading="loading"
+                        :data="drops"
+                        element-loading-text="Loading"
+                        border
+                        style="width: 100%">
+                    <el-table-column
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            label="Type"
+                    >
+                        <template slot-scope="scope">
+                            {{ scope.row.type === 'heroes' ? 'Герой' : 'Оружие' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="name"
+                            label="Name"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="stars"
+                            label="stars"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="date"
+                            label="Дата"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column align="center" prop="created_at" label="Управление" width="200">
+                        <template slot-scope="scope">
+                            <el-button icon="el-icon-edit" circle @click="editDrop(scope.row)"></el-button>
+                            <el-popconfirm
+                                    confirm-button-text='OK'
+                                    cancel-button-text='No, Thanks'
+                                    icon="el-icon-info"
+                                    icon-color="red"
+                                    title="Are you sure to delete this?"
+                                    @confirm="deleteDrop(scope.row.key)"
+                            >
+                                <el-button icon="el-icon-delete" slot="reference" circle></el-button>
+                            </el-popconfirm>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-tab-pane>
+            <el-tab-pane label="Weapon" name="Weapon">
+                <div class="drop-attempts" >
+                    <span>Количество молитв после легендарного дропа: {{ attempts || 'нет' }}</span>
+                </div>
+                <el-table
+                        v-loading="loading"
+                        :data="drops"
+                        element-loading-text="Loading"
+                        border
+                        style="width: 100%">
+                    <el-table-column
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            label="Type"
+                    >
+                        <template slot-scope="scope">
+                            {{ scope.row.type === 'heroes' ? 'Герой' : 'Оружие' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="name"
+                            label="Name"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="stars"
+                            label="stars"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="date"
+                            label="Дата"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column align="center" prop="created_at" label="Управление" width="200">
+                        <template slot-scope="scope">
+                            <el-button icon="el-icon-edit" circle @click="editDrop(scope.row)"></el-button>
+                            <el-popconfirm
+                                    confirm-button-text='OK'
+                                    cancel-button-text='No, Thanks'
+                                    icon="el-icon-info"
+                                    icon-color="red"
+                                    title="Are you sure to delete this?"
+                                    @confirm="deleteDrop(scope.row.key)"
+                            >
+                                <el-button icon="el-icon-delete" slot="reference" circle></el-button>
+                            </el-popconfirm>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-tab-pane>
         </el-tabs>
 
-        <EditDropModal ref="editDrop" @drops:updated="getDrops()"/>
+        <EditDropModal :weapons="weapons" :heroes="heroes" :activeName="activeName" ref="editDrop" @drops:updated="getDrops()"/>
     </div>
 </template>
 
 <script>
-    import {type, heroes} from '../utils/constants'
+    import {type} from '../utils/constants'
     import {mapGetters} from 'vuex'
     import EditDropModal from '../components/EditDropModal'
     export default {
@@ -136,6 +240,10 @@
                 this.$store.dispatch('drops/getFilteredDrops')
             },
 
+            changeTab() {
+                this.getDrops()
+            },
+
             validateDrop() {
                 if(!this.item.dropIndex) {
                     this.loading = false
@@ -173,6 +281,7 @@
             },
 
             editDrop(drop) {
+                console.log(drop)
                 this.$refs.editDrop.openModal(drop)
             },
 
