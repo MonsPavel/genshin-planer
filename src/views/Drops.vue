@@ -334,7 +334,7 @@
         }
 
         .el-table {
-            max-height: calc(100vh - 150px);
+            max-height: calc(100vh - 175px);
             overflow: auto;
         }
     }
