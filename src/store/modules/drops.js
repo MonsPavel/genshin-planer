@@ -36,7 +36,11 @@ const actions = {
             });
             if(fiveStars.length !== 0) {
                 commit('SET_TRY', array.length - +fiveStars[fiveStars.length - 1] - 1)
+            } else {
+                commit('SET_TRY', null)
             }
+        } else {
+            commit('SET_TRY', null)
         }
 
         commit('SET_DROPS', array)
